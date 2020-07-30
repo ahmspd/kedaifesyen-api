@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
-use App\Http\Resources\Categories as CategoryResourceCollection;
 use App\Http\Resources\Category as CategoryResource;
+use App\Http\Resources\Categories as CategoryResourceCollection;
 
 class CategoryController extends Controller
 {

@@ -14,13 +14,13 @@ class Category extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        $parent = parent::toArray($request);
 
-        $data['fashion']=$this->book()->paginate(6);
-        $data = array_merge($parent,$data);
+        $data['fashions'] = $this->fashions()->paginate(6);
+        $data = array_merge($parent, $data);
         return [
             'status' => 'success',
-            'message' => 'category data',
+            'message' => 'Category Data',
             'data' => $data
         ];
     }
