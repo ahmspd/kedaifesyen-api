@@ -18,8 +18,6 @@ class CreateOrdersTable extends Migration
             $table->integer('user_id');
             $table->float('total_price');
             $table->string('invoice_number');
-            $table->json('item');
-            $table->float('ongkir');
             $table->string('courier_service')->nullable();
             $table->enum('status',['SUBMIT','FINISH','CANCLE'])->default('SUBMIT');
             $table->timestamps();

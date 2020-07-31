@@ -33,8 +33,19 @@ Route::prefix('v1')->group(function(){
 	Route::get('fashions/slug/{slug}','FashionController@slug');
 	Route::get('fashions/search/{keyword}','FashionController@search');
 	Route::get('fashion/{id}','FashionController@view')->where('id','[0-9]+');
+	Route::get('fashion','FashionController@Qbuild')
+
+	//Shop Controller
+	Route::get('provinces','ShopController@provinces');
+	Route::get('cities','ShopController@cities');
+	Route::get('couriers','ShopController@couriers');
 
 	Route::middleware('auth:api')->group(function(){
 		Route::post('logout','AuthController@logout');
+		Route::post('update-profile','AuthController@update_profile');
+		Route::post('shipping','ShopController@shipping');
+		Route::post('services','ShopController@services');
+		Route::get('my-order','ShopController@myorder');
+		Route::post('payment','ShopController@payment');
 	});
 });

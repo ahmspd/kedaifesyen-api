@@ -12,7 +12,18 @@ class User extends Model
 {
     protected $table = 'users';
     protected $fillable = [
-        'name', 'email', 'password','username','roles','address','city_id','province_id','phone','avatar','api_token','status'
+        'name', 
+        'email', 
+        'password',
+        'username',
+        'roles',
+        'address',
+        'city_id',
+        'province_id',
+        'phone',
+        'avatar',
+        'api_token',
+        'status'
     ];
 
     public function generateToken(){

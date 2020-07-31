@@ -13,6 +13,6 @@ class Fashion extends Model
     ];
 
     public function categories(){
-    	return $this->belongsToMany('App\Models\Category');
+    	return $this->belongsToMany('App\Models\Category','fashion_category');
     }
 }

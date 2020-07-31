@@ -43,6 +43,7 @@ class AuthController extends Controller
     		'data' => $data
     	], $code);
     }
+
     public function register(Request $request){
     	$validator = Validator::make($request->all(),[
     		'name' => 'required|string|max:255',
@@ -83,6 +84,7 @@ class AuthController extends Controller
     		'data' => $data     
     	], $code);
     }
+
     public function logout(Request $request){
     	$user = Auth::user();
     	if($user){
@@ -94,5 +96,54 @@ class AuthController extends Controller
     		'message'=>'logout berhasil',
     		'data'=>null
     	],200);
+    }
+
+    public function update_profile(Request $request){
+        $user = Auth::user();
+        $validator = Validator::make($request->all(),[
+            
+            'email' => 'string|email|max:255',
+            'password' => 'string|min:6',
+            'address' => 'string'
+        ]);
+
+        $status = "error";
+        $message = "";
+        $data = null;
+        $code = 400;
+        if ($validator->fails()) {
+            # code...
+            $errors = $validator->errors();
+            $message = $errors;
+        }
+        else {
+            $user->fill([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password'=> Hash::make($request->password),
+                'address' => $request->address,
+                'city_id' => $request->city_id,
+                'province_id' => $request->province_id,
+                'phone' => $request->phone
+            ]);
+            $user->save();
+
+            if ($user) {
+                # code...
+                $status = "success";
+                $message = "update successfully";
+                $data = $user->toArray();
+                $code = 200;
+            }
+            else {
+                $message = 'Update failed';
+            }
+        }
+
+        return response()->json([
+            'status' => $status,
+            'message' => $message,
+            'data' => $data
+        ], $code);
     }
 }
