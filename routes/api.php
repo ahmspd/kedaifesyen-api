@@ -33,7 +33,7 @@ Route::prefix('v1')->group(function(){
 	Route::get('fashions/slug/{slug}','FashionController@slug');
 	Route::get('fashions/search/{keyword}','FashionController@search');
 	Route::get('fashion/{id}','FashionController@view')->where('id','[0-9]+');
-	Route::get('fashion','FashionController@Qbuild')
+	Route::get('fashion','FashionController@Qbuild');
 
 	//Shop Controller
 	Route::get('provinces','ShopController@provinces');
@@ -47,5 +47,7 @@ Route::prefix('v1')->group(function(){
 		Route::post('services','ShopController@services');
 		Route::get('my-order','ShopController@myorder');
 		Route::post('payment','ShopController@payment');
+		Route::post('edit-image','AuthController@edit_image');
+		Route::get('order/detail/{invoice}','ShopController@detail_order');
 	});
 });

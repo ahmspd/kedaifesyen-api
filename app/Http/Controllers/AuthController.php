@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
@@ -59,12 +60,24 @@ class AuthController extends Controller
     	 	$errors = $validator->errors();         
     	 	$message = $errors;     
     	 } 
-    	 else {         
+    	 else {   
+            if ($request->hasFile('avatar')) {
+                      # code...
+                    $avatar = $request->file('avatar');
+                    $filename = 'fesyen'.time();
+                    $avatar->move(public_path('images/avatar'),$filename);
+
+                    //return $filename;
+                }
+            else {
+                $filename = null;
+            }      
     	 	$user = User::create([             
     	 		'name' => $request->name,             
     	 		'email' => $request->email,             
     	 		'password' => Hash::make($request->password),             
-    	 		'roles' => json_encode(['CUSTOMER']),        
+    	 		'roles' => json_encode(['CUSTOMER']), 
+                'avatar' => $filename       
     	 	]); 
 
     	 	if ($user) {             
@@ -124,7 +137,8 @@ class AuthController extends Controller
                 'address' => $request->address,
                 'city_id' => $request->city_id,
                 'province_id' => $request->province_id,
-                'phone' => $request->phone
+                'phone' => $request->phone,
+                'avatar' => $request->avatar
             ]);
             $user->save();
 
@@ -138,6 +152,51 @@ class AuthController extends Controller
             else {
                 $message = 'Update failed';
             }
+        }
+
+        return response()->json([
+            'status' => $status,
+            'message' => $message,
+            'data' => $data
+        ], $code);
+    }
+    
+    public function edit_image(Request $request){
+        $user = Auth::user();
+
+        $status = "error";
+        $message = "";
+        $data = null;
+        $code = 400;
+
+        $request->validate([
+            'avatar' => 'image'
+        ]);
+            if ($request->hasFile('avatar')) {
+                # code...
+                //Storage::delete($files);
+                $avatar = $request->file('avatar');
+                $extension = $avatar->getClientOriginalExtension();
+                if ($user->avatar == null) {
+                    # code...
+                    $filename = time().'.'.$extension;
+                }
+                else {
+                    $filename = $user->avatar;
+                }
+                $avatar->move(public_path('images\avatar'),$filename);
+                $user->avatar = $filename;
+            }
+        $user->save();
+
+        if ($user) {
+            $status = "success";
+            $message = "update successfully";
+            $data = $user->toArray();
+            $code = 200;
+        }
+        else {
+            $message = 'edit avatar gagal';
         }
 
         return response()->json([

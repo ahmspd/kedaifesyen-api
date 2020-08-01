@@ -13,6 +13,7 @@ use App\Models\Order;
 use App\Models\FashionOrder;
 use Illuminate\Support\Facades\Auth;
 use DB;
+use App\Http\Resources\Order as OrderResource;
 
 class ShopController extends Controller
 {
@@ -283,7 +284,7 @@ class ShopController extends Controller
     					$product = Fashion::find($id);
     					if ($product) {
     						# code...
-    						if ($boproductok->stock>=$quantity) {
+    						if ($product->stock>=$quantity) {
     							# code...
     							$total_price += $product->price * $quantity;
     							$total_weight += $product->weight * $quantity;
@@ -407,4 +408,9 @@ class ShopController extends Controller
             'data' => $data
         ],200);
     } 
+
+    public function detail_order($invoice){
+        $criteria = Order::where('invoice_number',$invoice)->first();
+        return new OrderResource($criteria);
+    }
 }
