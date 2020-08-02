@@ -39,7 +39,7 @@ Route::prefix('v1')->group(function(){
 	Route::get('provinces','ShopController@provinces');
 	Route::get('cities','ShopController@cities');
 	Route::get('couriers','ShopController@couriers');
-
+	
 	Route::middleware('auth:api')->group(function(){
 		Route::post('logout','AuthController@logout');
 		Route::post('update-profile','AuthController@update_profile');
