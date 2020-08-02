@@ -16,7 +16,7 @@ class Order extends JsonResource
     {
         $parent = parent::toArray($request);
 
-        $data['fashionorder'] = $this->fashionorder;
+        $data['fashion_order'] = $this->fashion_order;
         $data = array_merge($parent, $data);
         return [
             'status' => 'success',
