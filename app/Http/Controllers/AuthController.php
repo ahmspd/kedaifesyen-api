@@ -113,10 +113,11 @@ class AuthController extends Controller
 
     public function update_profile(Request $request){
         $user = Auth::user();
+        
         $validator = Validator::make($request->all(),[
-            
-            'email' => 'string|email|max:255',
-            'address' => 'string'
+            'name' => 'required',
+            'email' => 'required|email|max:255',
+            'password' => 'required|min:6|confirmed'
         ]);
 
         $status = "error";
@@ -129,15 +130,30 @@ class AuthController extends Controller
             $message = $errors;
         }
         else {
-            $user->fill([
-                'name' => $request->name,
-                'email' => $request->email,
-                'address' => $request->address,
-                'city_id' => $request->city_id,
-                'province_id' => $request->province_id,
-                'phone' => $request->phone,
-                //'avatar' => $request->avatar
+            $request->validate([
+                'avatar' => 'image'
             ]);
+
+            $avatar = $request->file('avatar');
+            $extension = $avatar->getClientOriginalExtension();
+            if ($user->avatar == null) {
+                $filename = time().'.'.$extension;
+            }
+            else {
+                $filename = $user->avatar;
+            }
+            $avatar->move(public_path('images\avatar'),$filename);
+            $user->avatar = $filename;
+            printf($filename);
+            
+            $user->name = request('name');
+            $user->email = request('email');
+            $user->password = bcrypt(request('password'));
+            $user->address = request('address');
+            $user->phone = request('phone');
+            $user->province_id = request('province_id');
+            $user->city_id = request('city_id');
+
             $user->save();
 
             if ($user) {
@@ -170,21 +186,23 @@ class AuthController extends Controller
         $request->validate([
             'avatar' => 'image'
         ]);
-            if ($request->hasFile('avatar')) {
+
+        if ($request->hasFile('avatar')) {
+            # code...
+            //Storage::delete($files);
+            $avatar = $request->file('avatar');
+            $extension = $avatar->getClientOriginalExtension();
+            if ($user->avatar == null) {
                 # code...
-                //Storage::delete($files);
-                $avatar = $request->file('avatar');
-                $extension = $avatar->getClientOriginalExtension();
-                if ($user->avatar == null) {
-                    # code...
-                    $filename = time().'.'.$extension;
-                }
-                else {
-                    $filename = $user->avatar;
-                }
-                $avatar->move(public_path('images\avatar'),$filename);
-                $user->avatar = $filename;
+                $filename = time().'.'.$extension;
             }
+            else {
+                $filename = $user->avatar;
+            }
+            $avatar->move(public_path('images\avatar'),$filename);
+            $user->avatar = $filename;
+        }
+
         $user->save();
 
         if ($user) {
@@ -192,8 +210,7 @@ class AuthController extends Controller
             $message = "update successfully";
             $data = $user->toArray();
             $code = 200;
-        }
-        else {
+        } else {
             $message = 'edit avatar gagal';
         }
 
