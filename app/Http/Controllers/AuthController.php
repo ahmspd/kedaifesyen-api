@@ -116,7 +116,6 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(),[
             
             'email' => 'string|email|max:255',
-            'password' => 'string|min:6',
             'address' => 'string'
         ]);
 
@@ -133,12 +132,11 @@ class AuthController extends Controller
             $user->fill([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password'=> Hash::make($request->password),
                 'address' => $request->address,
                 'city_id' => $request->city_id,
                 'province_id' => $request->province_id,
                 'phone' => $request->phone,
-                'avatar' => $request->avatar
+                //'avatar' => $request->avatar
             ]);
             $user->save();
 
@@ -197,6 +195,32 @@ class AuthController extends Controller
         }
         else {
             $message = 'edit avatar gagal';
+        }
+
+        return response()->json([
+            'status' => $status,
+            'message' => $message,
+            'data' => $data
+        ], $code);
+    }
+
+    public function cek_password(Request $request){
+        $user = Auth::user();
+
+        $status = "error";
+        $message = "";
+        $data = null;
+        $code = 401;
+
+        if (Hash::check($request->password, $user->password)) {
+            # code...
+            $status = 'success';
+            $message = 'password benar';
+            $data = $user->toArray();
+            $code = 200;
+        }
+        else {
+            $message = "password salah";
         }
 
         return response()->json([

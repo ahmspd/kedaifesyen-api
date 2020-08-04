@@ -49,5 +49,6 @@ Route::prefix('v1')->group(function(){
 		Route::post('payment','ShopController@payment');
 		Route::post('edit-image','AuthController@edit_image');
 		Route::get('order/detail/{invoice}','ShopController@detail_order');
+		Route::post('cek-password','AuthController@cek_password');
 	});
 });
