@@ -136,12 +136,12 @@ class AuthController extends Controller
 
             $avatar = $request->file('avatar');
             $extension = $avatar->getClientOriginalExtension();
-            if ($user->avatar == null) {
-                $filename = time().'.'.$extension;
-            }
-            else {
-                $filename = $user->avatar;
-            }
+            //if ($user->avatar == null) {
+            $filename = time().'.'.$extension;
+            //}
+            //else {
+                //$filename = $user->avatar;
+            //}
             $avatar->move(public_path('images\avatar'),$filename);
             $user->avatar = $filename;
             printf($filename);
